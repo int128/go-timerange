@@ -1,15 +1,98 @@
-package timerange
+package timerange_test
 
 import (
 	"testing"
 	"time"
+
+	"github.com/int128/go-timerange"
 )
 
-func TestTimeRange_String(t *testing.T) {
-	r := TimeRange{
-		Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-		End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+func TestNew(t *testing.T) {
+	t.Run("start < end", func(t *testing.T) {
+		r := timerange.New(
+			time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		)
+		got := r.String()
+		want := "[2006-01-02T15:04:05Z, 2006-01-02T15:07:05Z]"
+		if want != got {
+			t.Errorf("New() wants %v but was %v", want, got)
+		}
+	})
+	t.Run("start == end", func(t *testing.T) {
+		r := timerange.New(
+			time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		)
+		got := r.String()
+		want := "[2006-01-02T15:04:05Z, 2006-01-02T15:04:05Z]"
+		if want != got {
+			t.Errorf("New() wants %v but was %v", want, got)
+		}
+	})
+	t.Run("start > end", func(t *testing.T) {
+		r := timerange.New(
+			time.Date(2006, 1, 3, 15, 4, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		)
+		got := r.IsZero()
+		const want = true
+		if want != got {
+			t.Errorf("IsZero() wants %v but was %v (r=%s)", want, got, r)
+		}
+	})
+}
+
+func TestNewFrom(t *testing.T) {
+	r := timerange.NewFrom(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		15*time.Minute,
+	)
+	t.Run("Start", func(t *testing.T) {
+		got := r.Start()
+		want := time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC)
+		if got != want {
+			t.Errorf("Start() wants %s but was %s", want, got)
+		}
+	})
+	t.Run("End", func(t *testing.T) {
+		got := r.End()
+		want := time.Date(2006, 1, 2, 15, 19, 5, 0, time.UTC)
+		if got != want {
+			t.Errorf("End() wants %s but was %s", want, got)
+		}
+	})
+}
+
+func TestTimeRange_Start(t *testing.T) {
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
+	got := r.Start()
+	want := time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC)
+	if got != want {
+		t.Errorf("Start() wants %s but was %s", want, got)
 	}
+}
+
+func TestTimeRange_End(t *testing.T) {
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
+	got := r.End()
+	want := time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC)
+	if got != want {
+		t.Errorf("End() wants %s but was %s", want, got)
+	}
+}
+
+func TestTimeRange_String(t *testing.T) {
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
 	t.Logf("String() = %s", r)
 	got := r.String()
 	want := "[2006-01-02T15:04:05Z, 2006-01-02T15:07:05Z]"
@@ -19,14 +102,14 @@ func TestTimeRange_String(t *testing.T) {
 }
 
 func TestTimeRange_Equal(t *testing.T) {
-	a := TimeRange{
-		Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-		End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-	}
-	b := TimeRange{
-		Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-		End:   time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
-	}
+	a := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
+	b := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
+	)
 	t.Run("a == a", func(t *testing.T) {
 		got := a.Equal(a)
 		const want = true
@@ -45,7 +128,7 @@ func TestTimeRange_Equal(t *testing.T) {
 
 func TestTimeRange_IsZero(t *testing.T) {
 	t.Run("zero", func(t *testing.T) {
-		var r TimeRange
+		var r timerange.TimeRange
 		got := r.IsZero()
 		const want = true
 		if want != got {
@@ -53,10 +136,10 @@ func TestTimeRange_IsZero(t *testing.T) {
 		}
 	})
 	t.Run("non-zero", func(t *testing.T) {
-		r := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-		}
+		r := timerange.New(
+			time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		)
 		got := r.IsZero()
 		const want = false
 		if want != got {
@@ -65,47 +148,11 @@ func TestTimeRange_IsZero(t *testing.T) {
 	})
 }
 
-func TestTimeRange_IsValid(t *testing.T) {
-	t.Run("Start < End", func(t *testing.T) {
-		r := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-		}
-		got := r.IsValid()
-		const want = true
-		if want != got {
-			t.Errorf("IsValid() wants %v but was %v", want, got)
-		}
-	})
-	t.Run("Start == End", func(t *testing.T) {
-		r := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-		}
-		got := r.IsValid()
-		const want = true
-		if want != got {
-			t.Errorf("IsValid() wants %v but was %v", want, got)
-		}
-	})
-	t.Run("Start > End", func(t *testing.T) {
-		r := TimeRange{
-			Start: time.Date(2006, 1, 3, 15, 4, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-		}
-		got := r.IsValid()
-		const want = false
-		if want != got {
-			t.Errorf("IsValid() wants %v but was %v", want, got)
-		}
-	})
-}
-
 func TestTimeRange_Duration(t *testing.T) {
-	r := TimeRange{
-		Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-		End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-	}
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
 	got := r.Duration()
 	want := 3 * time.Minute
 	if got != want {
@@ -114,10 +161,10 @@ func TestTimeRange_Duration(t *testing.T) {
 }
 
 func TestTimeRange_Contains(t *testing.T) {
-	r := TimeRange{
-		Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-		End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-	}
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
 
 	t.Run("point is before range", func(t *testing.T) {
 		point := time.Date(2006, 1, 2, 15, 3, 0, 0, time.UTC)
@@ -162,10 +209,10 @@ func TestTimeRange_Contains(t *testing.T) {
 }
 
 func TestTimeRange_Before(t *testing.T) {
-	r := TimeRange{
-		Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-		End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-	}
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
 
 	t.Run("point is before range", func(t *testing.T) {
 		point := time.Date(2006, 1, 2, 15, 3, 0, 0, time.UTC)
@@ -210,10 +257,10 @@ func TestTimeRange_Before(t *testing.T) {
 }
 
 func TestTimeRange_After(t *testing.T) {
-	r := TimeRange{
-		Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-		End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-	}
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
 
 	t.Run("point is before range", func(t *testing.T) {
 		point := time.Date(2006, 1, 2, 15, 3, 0, 0, time.UTC)
@@ -259,93 +306,93 @@ func TestTimeRange_After(t *testing.T) {
 
 func TestIntersect(t *testing.T) {
 	t.Run("same range", func(t *testing.T) {
-		a := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-		}
-		got := Intersect(a, a)
+		a := timerange.New(
+			time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		)
+		got := timerange.Intersect(a, a)
 		want := a
 		if !want.Equal(got) {
 			t.Errorf("Intersect(): want %v != got %v", want, got)
 		}
 	})
-	t.Run("a.Start < b < a.End", func(t *testing.T) {
-		a := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-		}
-		b := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
-		}
-		got := Intersect(a, b)
+	t.Run("a.start < b < a.end", func(t *testing.T) {
+		a := timerange.New(
+			time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		)
+		b := timerange.New(
+			time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
+		)
+		got := timerange.Intersect(a, b)
 		want := b
 		if !want.Equal(got) {
 			t.Errorf("Intersect(): want %v != got %v", want, got)
 		}
 	})
-	t.Run("b.Start < a.Start < b.End < a.End", func(t *testing.T) {
-		a := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-		}
-		b := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
-		}
-		got := Intersect(a, b)
-		want := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
-		}
+	t.Run("b.start < a.start < b.end < a.end", func(t *testing.T) {
+		a := timerange.New(
+			time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		)
+		b := timerange.New(
+			time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
+		)
+		got := timerange.Intersect(a, b)
+		want := timerange.New(
+			time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
+		)
 		if !want.Equal(got) {
 			t.Errorf("Intersect(): want %v != got %v", want, got)
 		}
 	})
-	t.Run("a.Start < b.Start < a.End < b.End", func(t *testing.T) {
-		a := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
-		}
-		b := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-		}
-		got := Intersect(a, b)
-		want := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
-		}
+	t.Run("a.start < b.start < a.end < b.end", func(t *testing.T) {
+		a := timerange.New(
+			time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
+		)
+		b := timerange.New(
+			time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		)
+		got := timerange.Intersect(a, b)
+		want := timerange.New(
+			time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
+		)
 		if !want.Equal(got) {
 			t.Errorf("Intersect(): want %v != got %v", want, got)
 		}
 	})
 	t.Run("a < b", func(t *testing.T) {
-		a := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-		}
-		b := TimeRange{
-			Start: time.Date(2006, 1, 2, 16, 5, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 16, 6, 5, 0, time.UTC),
-		}
-		got := Intersect(a, b)
-		want := TimeRange{}
+		a := timerange.New(
+			time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		)
+		b := timerange.New(
+			time.Date(2006, 1, 2, 16, 5, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 16, 6, 5, 0, time.UTC),
+		)
+		got := timerange.Intersect(a, b)
+		var want timerange.TimeRange
 		if !want.Equal(got) {
 			t.Errorf("Intersect(): want %v != got %v", want, got)
 		}
 	})
 	t.Run("a > b", func(t *testing.T) {
-		a := TimeRange{
-			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
-		}
-		b := TimeRange{
-			Start: time.Date(2006, 1, 2, 14, 5, 5, 0, time.UTC),
-			End:   time.Date(2006, 1, 2, 14, 6, 5, 0, time.UTC),
-		}
-		got := Intersect(a, b)
-		want := TimeRange{}
+		a := timerange.New(
+			time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		)
+		b := timerange.New(
+			time.Date(2006, 1, 2, 14, 5, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 14, 6, 5, 0, time.UTC),
+		)
+		got := timerange.Intersect(a, b)
+		var want timerange.TimeRange
 		if !want.Equal(got) {
 			t.Errorf("Intersect(): want %v != got %v", want, got)
 		}
