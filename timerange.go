@@ -22,6 +22,12 @@ func NewFrom(start time.Time, duration time.Duration) TimeRange {
 	return New(start, start.Add(duration))
 }
 
+// NewUntil returns a TimeRange with end and duration.
+// Duration must be positive.
+func NewUntil(end time.Time, duration time.Duration) TimeRange {
+	return New(end.Add(-duration), end)
+}
+
 // TimeRange represents an immutable range of time with timezone.
 // The range includes start and end, i.e. [start, end].
 // Start must be before end.
