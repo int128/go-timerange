@@ -19,6 +19,11 @@ func (r TimeRange) String() string {
 	return fmt.Sprintf("[%s, %s]", r.Start.Format(time.RFC3339), r.End.Format(time.RFC3339))
 }
 
+// Equal returns true if this range is equivalent to one.
+func (r TimeRange) Equal(x TimeRange) bool {
+	return r.Start.Equal(x.Start) && r.End.Equal(x.End)
+}
+
 // Valid returns true if Start <= End.
 func (r TimeRange) Valid() bool {
 	return r.Start.Equal(r.End) || r.Start.Before(r.End)
