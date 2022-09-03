@@ -16,15 +16,15 @@ func New(start, end time.Time) TimeRange {
 	return TimeRange{start: start, end: end}
 }
 
-// NewFrom returns a TimeRange with start and duration.
+// From returns a TimeRange with start and duration.
 // Duration must be positive.
-func NewFrom(start time.Time, duration time.Duration) TimeRange {
+func From(start time.Time, duration time.Duration) TimeRange {
 	return New(start, start.Add(duration))
 }
 
-// NewUntil returns a TimeRange with end and duration.
+// Until returns a TimeRange with end and duration.
 // Duration must be positive.
-func NewUntil(end time.Time, duration time.Duration) TimeRange {
+func Until(end time.Time, duration time.Duration) TimeRange {
 	return New(end.Add(-duration), end)
 }
 
