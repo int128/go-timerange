@@ -12,7 +12,7 @@ func TestTimeRange_String(t *testing.T) {
 	}
 	t.Logf("String() = %s", r)
 	got := r.String()
-	want := "2006-01-02T15:04:05Z - 2006-01-02T15:07:05Z"
+	want := "[2006-01-02T15:04:05Z, 2006-01-02T15:07:05Z]"
 	if got != want {
 		t.Errorf("String() wants %s but was %s", want, got)
 	}

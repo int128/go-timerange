@@ -16,7 +16,7 @@ type TimeRange struct {
 
 // String returns a string representation of this range in RFC3339.
 func (r TimeRange) String() string {
-	return fmt.Sprintf("%s - %s", r.Start.Format(time.RFC3339), r.End.Format(time.RFC3339))
+	return fmt.Sprintf("[%s, %s]", r.Start.Format(time.RFC3339), r.End.Format(time.RFC3339))
 }
 
 // Valid returns true if Start <= End.
