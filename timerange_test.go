@@ -18,6 +18,31 @@ func TestTimeRange_String(t *testing.T) {
 	}
 }
 
+func TestTimeRange_Equal(t *testing.T) {
+	a := TimeRange{
+		Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	}
+	b := TimeRange{
+		Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		End:   time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
+	}
+	t.Run("a == a", func(t *testing.T) {
+		got := a.Equal(a)
+		const want = true
+		if want != got {
+			t.Errorf("Equal() wants %v but was %v", want, got)
+		}
+	})
+	t.Run("a != b", func(t *testing.T) {
+		got := a.Equal(b)
+		const want = false
+		if want != got {
+			t.Errorf("Equal() wants %v but was %v", want, got)
+		}
+	})
+}
+
 func TestTimeRange_Duration(t *testing.T) {
 	r := TimeRange{
 		Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
