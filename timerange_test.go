@@ -43,16 +43,16 @@ func TestTimeRange_Equal(t *testing.T) {
 	})
 }
 
-func TestTimeRange_Valid(t *testing.T) {
+func TestTimeRange_IsValid(t *testing.T) {
 	t.Run("Start < End", func(t *testing.T) {
 		r := TimeRange{
 			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
 			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
 		}
-		got := r.Valid()
+		got := r.IsValid()
 		const want = true
 		if want != got {
-			t.Errorf("Valid() wants %v but was %v", want, got)
+			t.Errorf("IsValid() wants %v but was %v", want, got)
 		}
 	})
 	t.Run("Start == End", func(t *testing.T) {
@@ -60,10 +60,10 @@ func TestTimeRange_Valid(t *testing.T) {
 			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
 			End:   time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
 		}
-		got := r.Valid()
+		got := r.IsValid()
 		const want = true
 		if want != got {
-			t.Errorf("Valid() wants %v but was %v", want, got)
+			t.Errorf("IsValid() wants %v but was %v", want, got)
 		}
 	})
 	t.Run("Start > End", func(t *testing.T) {
@@ -71,10 +71,10 @@ func TestTimeRange_Valid(t *testing.T) {
 			Start: time.Date(2006, 1, 3, 15, 4, 5, 0, time.UTC),
 			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
 		}
-		got := r.Valid()
+		got := r.IsValid()
 		const want = false
 		if want != got {
-			t.Errorf("Valid() wants %v but was %v", want, got)
+			t.Errorf("IsValid() wants %v but was %v", want, got)
 		}
 	})
 }
