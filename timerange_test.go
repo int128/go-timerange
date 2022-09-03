@@ -12,7 +12,7 @@ func TestTimeRange_String(t *testing.T) {
 	}
 	t.Logf("String() = %s", r)
 	got := r.String()
-	want := "2006-01-02T15:04:05Z - 2006-01-02T15:07:05Z"
+	want := "[2006-01-02T15:04:05Z, 2006-01-02T15:07:05Z]"
 	if got != want {
 		t.Errorf("String() wants %s but was %s", want, got)
 	}
@@ -44,8 +44,24 @@ func TestTimeRange_Contains(t *testing.T) {
 			t.Errorf("Contains() wants %v but was %v", want, got)
 		}
 	})
+	t.Run("point is left edge of range", func(t *testing.T) {
+		point := time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC)
+		got := r.Contains(point)
+		const want = true
+		if want != got {
+			t.Errorf("Contains() wants %v but was %v", want, got)
+		}
+	})
 	t.Run("point is in range", func(t *testing.T) {
 		point := time.Date(2006, 1, 2, 15, 6, 0, 0, time.UTC)
+		got := r.Contains(point)
+		const want = true
+		if want != got {
+			t.Errorf("Contains() wants %v but was %v", want, got)
+		}
+	})
+	t.Run("point is right edge of range", func(t *testing.T) {
+		point := time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC)
 		got := r.Contains(point)
 		const want = true
 		if want != got {
@@ -76,8 +92,24 @@ func TestTimeRange_Before(t *testing.T) {
 			t.Errorf("Before() wants %v but was %v", want, got)
 		}
 	})
+	t.Run("point is left edge of range", func(t *testing.T) {
+		point := time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC)
+		got := r.Before(point)
+		const want = false
+		if want != got {
+			t.Errorf("Before() wants %v but was %v", want, got)
+		}
+	})
 	t.Run("point is in range", func(t *testing.T) {
 		point := time.Date(2006, 1, 2, 15, 6, 0, 0, time.UTC)
+		got := r.Before(point)
+		const want = false
+		if want != got {
+			t.Errorf("Before() wants %v but was %v", want, got)
+		}
+	})
+	t.Run("point is right edge of range", func(t *testing.T) {
+		point := time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC)
 		got := r.Before(point)
 		const want = false
 		if want != got {
@@ -108,8 +140,24 @@ func TestTimeRange_After(t *testing.T) {
 			t.Errorf("After() wants %v but was %v", want, got)
 		}
 	})
+	t.Run("point is left edge of range", func(t *testing.T) {
+		point := time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC)
+		got := r.After(point)
+		const want = false
+		if want != got {
+			t.Errorf("After() wants %v but was %v", want, got)
+		}
+	})
 	t.Run("point is in range", func(t *testing.T) {
 		point := time.Date(2006, 1, 2, 15, 6, 0, 0, time.UTC)
+		got := r.After(point)
+		const want = false
+		if want != got {
+			t.Errorf("After() wants %v but was %v", want, got)
+		}
+	})
+	t.Run("point is right edge of range", func(t *testing.T) {
+		point := time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC)
 		got := r.After(point)
 		const want = false
 		if want != got {
