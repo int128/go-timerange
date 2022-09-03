@@ -22,7 +22,7 @@ func CheckIfAvailable(desiredTime time.Time) {
 		Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
 		End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
 	}
-	if availableRange.Contains(desiredTime) {
+	if availableRange.Contain(desiredTime) {
 		fmt.Printf("The reservation at %s is available.", desiredTime)
 	}
 }

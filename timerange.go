@@ -29,8 +29,8 @@ func (r TimeRange) Duration() time.Duration {
 	return r.End.Sub(r.Start)
 }
 
-// Contains returns true if the time is in this range.
-func (r TimeRange) Contains(t time.Time) bool {
+// Contain returns true if the time is in this range.
+func (r TimeRange) Contain(t time.Time) bool {
 	return r.Start.Equal(t) || r.End.Equal(t) || (r.Start.Before(t) && t.Before(r.End))
 }
 
