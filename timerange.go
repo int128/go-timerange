@@ -24,6 +24,11 @@ func (r TimeRange) Equal(x TimeRange) bool {
 	return r.Start.Equal(x.Start) && r.End.Equal(x.End)
 }
 
+// IsZero returns true if both Start and End are zero value.
+func (r TimeRange) IsZero() bool {
+	return r.Start.IsZero() && r.End.IsZero()
+}
+
 // IsValid returns true if Start <= End.
 func (r TimeRange) IsValid() bool {
 	return r.Start.Equal(r.End) || r.Start.Before(r.End)
