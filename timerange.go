@@ -7,6 +7,7 @@ import (
 )
 
 // TimeRange represents a range of time with timezone.
+// The range includes Start and End, i.e. [Start, End].
 // Start must be before End.
 type TimeRange struct {
 	Start time.Time
@@ -30,7 +31,7 @@ func (r TimeRange) Duration() time.Duration {
 
 // Contains returns true if the time is in this range.
 func (r TimeRange) Contains(t time.Time) bool {
-	return r.Start.Before(t) && t.Before(r.End)
+	return r.Start.Equal(t) || r.End.Equal(t) || (r.Start.Before(t) && t.Before(r.End))
 }
 
 // Before returns true if this range is before the time.
