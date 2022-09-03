@@ -49,7 +49,8 @@ func (r TimeRange) After(t time.Time) bool {
 	return r.Start.After(t)
 }
 
-// Intersect returns an intersection of ranges.
+// Intersect returns the intersection of given ranges.
+// If the intersection is empty, this returns a zero struct.
 func Intersect(a, b TimeRange) TimeRange {
 	r := TimeRange{
 		Start: maxTime(a.Start, b.Start),

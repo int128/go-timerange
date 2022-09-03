@@ -236,6 +236,17 @@ func TestTimeRange_After(t *testing.T) {
 }
 
 func TestIntersect(t *testing.T) {
+	t.Run("same range", func(t *testing.T) {
+		a := TimeRange{
+			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		}
+		got := Intersect(a, a)
+		want := a
+		if !want.Equal(got) {
+			t.Errorf("Intersect(): want %v != got %v", want, got)
+		}
+	})
 	t.Run("a.Start < b < a.End", func(t *testing.T) {
 		a := TimeRange{
 			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
