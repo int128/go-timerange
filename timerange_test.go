@@ -43,6 +43,28 @@ func TestTimeRange_Equal(t *testing.T) {
 	})
 }
 
+func TestTimeRange_IsZero(t *testing.T) {
+	t.Run("zero", func(t *testing.T) {
+		var r TimeRange
+		got := r.IsZero()
+		const want = true
+		if want != got {
+			t.Errorf("IsZero() wants %v but was %v", want, got)
+		}
+	})
+	t.Run("non-zero", func(t *testing.T) {
+		r := TimeRange{
+			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		}
+		got := r.IsZero()
+		const want = false
+		if want != got {
+			t.Errorf("IsZero() wants %v but was %v", want, got)
+		}
+	})
+}
+
 func TestTimeRange_IsValid(t *testing.T) {
 	t.Run("Start < End", func(t *testing.T) {
 		r := TimeRange{
