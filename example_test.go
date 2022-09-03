@@ -37,8 +37,8 @@ func ExampleNewFrom() {
 	// output: [2006-01-02T15:04:05Z, 2006-01-02T15:19:05Z]
 }
 
-func ExampleNewUntil() {
-	r := timerange.NewUntil(
+func ExampleUntil() {
+	r := timerange.Until(
 		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
 		15*time.Minute,
 	)

@@ -55,8 +55,8 @@ func TestNewFrom(t *testing.T) {
 	}
 }
 
-func TestNewUntil(t *testing.T) {
-	r := timerange.NewUntil(
+func TestUntil(t *testing.T) {
+	r := timerange.Until(
 		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
 		15*time.Minute,
 	)
