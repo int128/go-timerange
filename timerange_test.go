@@ -48,20 +48,23 @@ func TestNewFrom(t *testing.T) {
 		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
 		15*time.Minute,
 	)
-	t.Run("Start", func(t *testing.T) {
-		got := r.Start()
-		want := time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC)
-		if got != want {
-			t.Errorf("Start() wants %s but was %s", want, got)
-		}
-	})
-	t.Run("End", func(t *testing.T) {
-		got := r.End()
-		want := time.Date(2006, 1, 2, 15, 19, 5, 0, time.UTC)
-		if got != want {
-			t.Errorf("End() wants %s but was %s", want, got)
-		}
-	})
+	got := r.String()
+	want := "[2006-01-02T15:04:05Z, 2006-01-02T15:19:05Z]"
+	if want != got {
+		t.Errorf("New() wants %v but was %v", want, got)
+	}
+}
+
+func TestNewUntil(t *testing.T) {
+	r := timerange.NewUntil(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		15*time.Minute,
+	)
+	got := r.String()
+	want := "[2006-01-02T14:49:05Z, 2006-01-02T15:04:05Z]"
+	if want != got {
+		t.Errorf("New() wants %v but was %v", want, got)
+	}
 }
 
 func TestTimeRange_Start(t *testing.T) {
