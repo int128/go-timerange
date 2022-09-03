@@ -75,6 +75,12 @@ func (r TimeRange) After(t time.Time) bool {
 	return r.start.After(t)
 }
 
+// In returns true if the time is within the range.
+// This is syntax sugar of TimeRange.Contains().
+func In(t time.Time, r TimeRange) bool {
+	return r.Contains(t)
+}
+
 // Intersect returns the intersection of given ranges.
 // If the intersection is empty, this returns a zero struct.
 func Intersect(a, b TimeRange) TimeRange {

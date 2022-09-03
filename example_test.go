@@ -13,7 +13,7 @@ func ExampleTimeRange_Contains() {
 		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
 		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
 	)
-	if availableRange.Contains(desiredTime) {
+	if timerange.In(desiredTime, availableRange) {
 		fmt.Printf("The reservation at %s is available.", desiredTime)
 	}
 	// output: The reservation at 2006-01-02 15:06:00 +0000 UTC is available.
