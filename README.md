@@ -12,7 +12,7 @@ go get github.com/int128/go-timerange
 package example
 
 import (
-	"log"
+	"fmt"
 	"time"
 	"github.com/int128/go-timerange"
 )
@@ -23,7 +23,7 @@ func CheckIfAvailable(desiredTime time.Time) {
 		End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
 	}
 	if availableRange.Contains(desiredTime) {
-		log.Printf("The reservation %s is available", t)
+		fmt.Printf("The reservation at %s is available.", desiredTime)
 	}
 }
 ```
