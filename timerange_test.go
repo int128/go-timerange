@@ -43,8 +43,8 @@ func TestNew(t *testing.T) {
 	})
 }
 
-func TestNewFrom(t *testing.T) {
-	r := timerange.NewFrom(
+func TestFrom(t *testing.T) {
+	r := timerange.From(
 		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
 		15*time.Minute,
 	)

@@ -28,20 +28,16 @@ func ExampleNew() {
 	// output: [2006-01-02T15:04:05Z, 2006-01-02T15:07:05Z]
 }
 
-func ExampleNewFrom() {
-	r := timerange.NewFrom(
-		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-		15*time.Minute,
-	)
+func ExampleFrom() {
+	start := time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC)
+	r := timerange.From(start, 15*time.Minute)
 	fmt.Print(r)
 	// output: [2006-01-02T15:04:05Z, 2006-01-02T15:19:05Z]
 }
 
 func ExampleUntil() {
-	r := timerange.Until(
-		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
-		15*time.Minute,
-	)
+	end := time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC)
+	r := timerange.Until(end, 15*time.Minute)
 	fmt.Print(r)
 	// output: [2006-01-02T14:49:05Z, 2006-01-02T15:04:05Z]
 }
