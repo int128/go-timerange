@@ -1,4 +1,5 @@
-// Package timerange provides functionality of date time range.
+// Package timerange provides a simple type of time range.
+// It is immutable type.
 package timerange
 
 import (
@@ -7,11 +8,16 @@ import (
 )
 
 // New returns a TimeRange with start and end.
+// If start > end, this returns a zero value.
 func New(start, end time.Time) TimeRange {
+	if start.After(end) {
+		return TimeRange{}
+	}
 	return TimeRange{start: start, end: end}
 }
 
 // NewFrom returns a TimeRange with start and duration.
+// Duration must be positive.
 func NewFrom(start time.Time, duration time.Duration) TimeRange {
 	return New(start, start.Add(duration))
 }
@@ -49,11 +55,6 @@ func (r TimeRange) IsZero() bool {
 	return r.start.IsZero() && r.end.IsZero()
 }
 
-// IsValid returns true if start <= end.
-func (r TimeRange) IsValid() bool {
-	return r.start.Equal(r.end) || r.start.Before(r.end)
-}
-
 // Duration returns the duration between start and end.
 func (r TimeRange) Duration() time.Duration {
 	return r.end.Sub(r.start)
@@ -77,14 +78,10 @@ func (r TimeRange) After(t time.Time) bool {
 // Intersect returns the intersection of given ranges.
 // If the intersection is empty, this returns a zero struct.
 func Intersect(a, b TimeRange) TimeRange {
-	r := TimeRange{
-		start: maxTime(a.start, b.start),
-		end:   minTime(a.end, b.end),
-	}
-	if !r.IsValid() {
-		return TimeRange{}
-	}
-	return r
+	return New(
+		maxTime(a.start, b.start),
+		minTime(a.end, b.end),
+	)
 }
 
 func minTime(a, b time.Time) time.Time {
