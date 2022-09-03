@@ -234,3 +234,87 @@ func TestTimeRange_After(t *testing.T) {
 		}
 	})
 }
+
+func TestIntersect(t *testing.T) {
+	t.Run("a.Start < b < a.End", func(t *testing.T) {
+		a := TimeRange{
+			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		}
+		b := TimeRange{
+			Start: time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
+		}
+		got := Intersect(a, b)
+		want := b
+		if !want.Equal(got) {
+			t.Errorf("Intersect(): want %v != got %v", want, got)
+		}
+	})
+	t.Run("b.Start < a.Start < b.End < a.End", func(t *testing.T) {
+		a := TimeRange{
+			Start: time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		}
+		b := TimeRange{
+			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
+		}
+		got := Intersect(a, b)
+		want := TimeRange{
+			Start: time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
+		}
+		if !want.Equal(got) {
+			t.Errorf("Intersect(): want %v != got %v", want, got)
+		}
+	})
+	t.Run("a.Start < b.Start < a.End < b.End", func(t *testing.T) {
+		a := TimeRange{
+			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
+		}
+		b := TimeRange{
+			Start: time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		}
+		got := Intersect(a, b)
+		want := TimeRange{
+			Start: time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
+		}
+		if !want.Equal(got) {
+			t.Errorf("Intersect(): want %v != got %v", want, got)
+		}
+	})
+	t.Run("a < b", func(t *testing.T) {
+		a := TimeRange{
+			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		}
+		b := TimeRange{
+			Start: time.Date(2006, 1, 2, 16, 5, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 16, 6, 5, 0, time.UTC),
+		}
+		got := Intersect(a, b)
+		want := TimeRange{}
+		if !want.Equal(got) {
+			t.Errorf("Intersect(): want %v != got %v", want, got)
+		}
+	})
+	t.Run("a > b", func(t *testing.T) {
+		a := TimeRange{
+			Start: time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+		}
+		b := TimeRange{
+			Start: time.Date(2006, 1, 2, 14, 5, 5, 0, time.UTC),
+			End:   time.Date(2006, 1, 2, 14, 6, 5, 0, time.UTC),
+		}
+		got := Intersect(a, b)
+		want := TimeRange{}
+		if !want.Equal(got) {
+			t.Errorf("Intersect(): want %v != got %v", want, got)
+		}
+	})
+}

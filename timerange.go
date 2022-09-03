@@ -48,3 +48,29 @@ func (r TimeRange) Before(t time.Time) bool {
 func (r TimeRange) After(t time.Time) bool {
 	return r.Start.After(t)
 }
+
+// Intersect returns an intersection of ranges.
+func Intersect(a, b TimeRange) TimeRange {
+	r := TimeRange{
+		Start: maxTime(a.Start, b.Start),
+		End:   minTime(a.End, b.End),
+	}
+	if !r.IsValid() {
+		return TimeRange{}
+	}
+	return r
+}
+
+func minTime(a, b time.Time) time.Time {
+	if a.Before(b) {
+		return a
+	}
+	return b
+}
+
+func maxTime(a, b time.Time) time.Time {
+	if a.After(b) {
+		return a
+	}
+	return b
+}
