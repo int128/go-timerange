@@ -87,6 +87,12 @@ func (r TimeRange) Shift(d time.Duration) TimeRange {
 	return New(r.start.Add(d), r.end.Add(d))
 }
 
+// Extend returns an extended TimeRange for the duration.
+// Duration can be positive or negative.
+func (r TimeRange) Extend(d time.Duration) TimeRange {
+	return New(r.start, r.end.Add(d))
+}
+
 // In returns true if the time is within the range.
 // This is a syntax sugar of TimeRange.Contains().
 func In(t time.Time, r TimeRange) bool {
