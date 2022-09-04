@@ -94,7 +94,7 @@ func (r TimeRange) Extend(d time.Duration) TimeRange {
 }
 
 // In returns true if the time is within the range.
-// This is a syntax sugar of TimeRange.Contains().
+// This is a synonym of TimeRange.Contains().
 func In(t time.Time, r TimeRange) bool {
 	return r.Contains(t)
 }

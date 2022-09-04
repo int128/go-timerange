@@ -7,13 +7,25 @@ import (
 	"github.com/int128/go-timerange"
 )
 
-func ExampleTimeRange_Contains() {
+func ExampleIn() {
 	desiredTime := time.Date(2006, 1, 2, 15, 6, 0, 0, time.UTC)
 	availableRange := timerange.New(
 		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
 		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
 	)
 	if timerange.In(desiredTime, availableRange) {
+		fmt.Printf("The reservation at %s is available.", desiredTime)
+	}
+	// output: The reservation at 2006-01-02 15:06:00 +0000 UTC is available.
+}
+
+func ExampleTimeRange_Contains() {
+	desiredTime := time.Date(2006, 1, 2, 15, 6, 0, 0, time.UTC)
+	availableRange := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
+	if availableRange.Contains(desiredTime) {
 		fmt.Printf("The reservation at %s is available.", desiredTime)
 	}
 	// output: The reservation at 2006-01-02 15:06:00 +0000 UTC is available.
@@ -49,6 +61,15 @@ func ExampleTimeRange_String() {
 	)
 	fmt.Print(r)
 	// output: [2006-01-02T15:04:05Z, 2006-01-02T15:07:05Z]
+}
+
+func ExampleTimeRange_Shift() {
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
+	fmt.Print(r.Shift(15 * time.Minute))
+	// output: [2006-01-02T15:19:05Z, 2006-01-02T15:22:05Z]
 }
 
 func ExampleTimeRange_Extend() {
