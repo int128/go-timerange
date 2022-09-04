@@ -80,3 +80,34 @@ func ExampleTimeRange_Extend() {
 	fmt.Print(r.Extend(15 * time.Minute))
 	// output: [2006-01-02T15:04:05Z, 2006-01-02T15:22:05Z]
 }
+
+func ExampleTimeRange_Split() {
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
+	for _, t := range r.Split(1 * time.Minute) {
+		fmt.Println(t)
+	}
+	// output:
+	// 2006-01-02 15:04:05 +0000 UTC
+	// 2006-01-02 15:05:05 +0000 UTC
+	// 2006-01-02 15:06:05 +0000 UTC
+	// 2006-01-02 15:07:05 +0000 UTC
+}
+
+func ExampleTimeRange_SplitIterator() {
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
+	iter := r.SplitIterator(1 * time.Minute)
+	for iter.HasNext() {
+		fmt.Println(iter.Next())
+	}
+	// output:
+	// 2006-01-02 15:04:05 +0000 UTC
+	// 2006-01-02 15:05:05 +0000 UTC
+	// 2006-01-02 15:06:05 +0000 UTC
+	// 2006-01-02 15:07:05 +0000 UTC
+}
