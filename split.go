@@ -3,7 +3,9 @@ package timerange
 import "time"
 
 // Split returns an array of time points within this range.
-// If span is longer than this range, it returns only start time.
+// If the span is longer than this range, this returns only start time.
+//
+// If the result array is too long, consider using SplitIterator() instead.
 func (r TimeRange) Split(span time.Duration) []time.Time {
 	var points []time.Time
 	for t := r.start; t.Equal(r.end) || t.Before(r.end); t = t.Add(span) {
@@ -13,9 +15,7 @@ func (r TimeRange) Split(span time.Duration) []time.Time {
 }
 
 // SplitIterator returns an iterator for time points within this range.
-// If span is longer than this range, it returns only start time.
-//
-// Consider this method instead of Split, if the result is too long.
+// If the span is longer than this range, this returns only start time.
 func (r TimeRange) SplitIterator(span time.Duration) SplitIterator {
 	return &splitIterator{timeRange: r, span: span}
 }
@@ -36,10 +36,13 @@ type splitIterator struct {
 	span      time.Duration
 }
 
+// HasNext returns true if the next time is within the range.
 func (s *splitIterator) HasNext() bool {
 	return s.next.Equal(s.timeRange.end) || s.next.Before(s.timeRange.end)
 }
 
+// Next returns the next time.
+// It the next time is not in the range, this returns a zero value.
 func (s *splitIterator) Next() time.Time {
 	if !s.HasNext() {
 		return time.Time{}
