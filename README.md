@@ -2,6 +2,8 @@
 
 This is a Go package to handle a time range.
 
+See https://pkg.go.dev/github.com/int128/go-timerange for details.
+
 ## Getting Started
 
 To install this package,
