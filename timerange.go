@@ -71,6 +71,12 @@ func (r TimeRange) Contains(t time.Time) bool {
 	return r.start.Equal(t) || r.end.Equal(t) || (r.start.Before(t) && t.Before(r.end))
 }
 
+// In returns true if the time is within the range.
+// This is a synonym of TimeRange.Contains().
+func In(t time.Time, r TimeRange) bool {
+	return r.Contains(t)
+}
+
 // Before returns true if this range is before the time.
 func (r TimeRange) Before(t time.Time) bool {
 	return r.end.Before(t)
@@ -91,33 +97,4 @@ func (r TimeRange) Shift(d time.Duration) TimeRange {
 // Duration can be positive or negative.
 func (r TimeRange) Extend(d time.Duration) TimeRange {
 	return New(r.start, r.end.Add(d))
-}
-
-// In returns true if the time is within the range.
-// This is a synonym of TimeRange.Contains().
-func In(t time.Time, r TimeRange) bool {
-	return r.Contains(t)
-}
-
-// Intersect returns the intersection of given ranges.
-// If the intersection is empty, this returns a zero struct.
-func Intersect(a, b TimeRange) TimeRange {
-	return New(
-		maxTime(a.start, b.start),
-		minTime(a.end, b.end),
-	)
-}
-
-func minTime(a, b time.Time) time.Time {
-	if a.Before(b) {
-		return a
-	}
-	return b
-}
-
-func maxTime(a, b time.Time) time.Time {
-	if a.After(b) {
-		return a
-	}
-	return b
 }
