@@ -16,7 +16,7 @@ func TestNew(t *testing.T) {
 		got := r.String()
 		want := "[2006-01-02T15:04:05Z, 2006-01-02T15:07:05Z]"
 		if want != got {
-			t.Errorf("New() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("start == end", func(t *testing.T) {
@@ -27,7 +27,7 @@ func TestNew(t *testing.T) {
 		got := r.String()
 		want := "[2006-01-02T15:04:05Z, 2006-01-02T15:04:05Z]"
 		if want != got {
-			t.Errorf("New() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("start > end", func(t *testing.T) {
@@ -38,7 +38,7 @@ func TestNew(t *testing.T) {
 		got := r.IsZero()
 		const want = true
 		if want != got {
-			t.Errorf("IsZero() wants %v but was %v (r=%s)", want, got, r)
+			t.Errorf("want %v but was %v (r=%s)", want, got, r)
 		}
 	})
 }
@@ -51,7 +51,7 @@ func TestFrom(t *testing.T) {
 	got := r.String()
 	want := "[2006-01-02T15:04:05Z, 2006-01-02T15:19:05Z]"
 	if want != got {
-		t.Errorf("New() wants %v but was %v", want, got)
+		t.Errorf("want %v but was %v", want, got)
 	}
 }
 
@@ -63,7 +63,7 @@ func TestUntil(t *testing.T) {
 	got := r.String()
 	want := "[2006-01-02T14:49:05Z, 2006-01-02T15:04:05Z]"
 	if want != got {
-		t.Errorf("New() wants %v but was %v", want, got)
+		t.Errorf("want %v but was %v", want, got)
 	}
 }
 
@@ -75,7 +75,7 @@ func TestTimeRange_Start(t *testing.T) {
 	got := r.Start()
 	want := time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC)
 	if got != want {
-		t.Errorf("Start() wants %s but was %s", want, got)
+		t.Errorf("want %s but was %s", want, got)
 	}
 }
 
@@ -87,7 +87,7 @@ func TestTimeRange_End(t *testing.T) {
 	got := r.End()
 	want := time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC)
 	if got != want {
-		t.Errorf("End() wants %s but was %s", want, got)
+		t.Errorf("want %s but was %s", want, got)
 	}
 }
 
@@ -100,7 +100,7 @@ func TestTimeRange_String(t *testing.T) {
 	got := r.String()
 	want := "[2006-01-02T15:04:05Z, 2006-01-02T15:07:05Z]"
 	if got != want {
-		t.Errorf("String() wants %s but was %s", want, got)
+		t.Errorf("want %s but was %s", want, got)
 	}
 }
 
@@ -117,14 +117,14 @@ func TestTimeRange_Equal(t *testing.T) {
 		got := a.Equal(a)
 		const want = true
 		if want != got {
-			t.Errorf("Equal() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("a != b", func(t *testing.T) {
 		got := a.Equal(b)
 		const want = false
 		if want != got {
-			t.Errorf("Equal() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 }
@@ -135,7 +135,7 @@ func TestTimeRange_IsZero(t *testing.T) {
 		got := r.IsZero()
 		const want = true
 		if want != got {
-			t.Errorf("IsZero() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("non-zero", func(t *testing.T) {
@@ -146,7 +146,7 @@ func TestTimeRange_IsZero(t *testing.T) {
 		got := r.IsZero()
 		const want = false
 		if want != got {
-			t.Errorf("IsZero() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 }
@@ -159,7 +159,7 @@ func TestTimeRange_Duration(t *testing.T) {
 	got := r.Duration()
 	want := 3 * time.Minute
 	if got != want {
-		t.Errorf("Duration() wants %s but was %s", want, got)
+		t.Errorf("want %s but was %s", want, got)
 	}
 }
 
@@ -174,7 +174,7 @@ func TestTimeRange_Contains(t *testing.T) {
 		got := r.Contains(point)
 		const want = false
 		if want != got {
-			t.Errorf("Contains() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("point is left edge of range", func(t *testing.T) {
@@ -182,7 +182,7 @@ func TestTimeRange_Contains(t *testing.T) {
 		got := r.Contains(point)
 		const want = true
 		if want != got {
-			t.Errorf("Contains() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("point is in range", func(t *testing.T) {
@@ -190,7 +190,7 @@ func TestTimeRange_Contains(t *testing.T) {
 		got := r.Contains(point)
 		const want = true
 		if want != got {
-			t.Errorf("Contains() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("point is right edge of range", func(t *testing.T) {
@@ -198,7 +198,7 @@ func TestTimeRange_Contains(t *testing.T) {
 		got := r.Contains(point)
 		const want = true
 		if want != got {
-			t.Errorf("Contains() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("point is after range", func(t *testing.T) {
@@ -206,7 +206,7 @@ func TestTimeRange_Contains(t *testing.T) {
 		got := r.Contains(point)
 		const want = false
 		if want != got {
-			t.Errorf("Contains() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 }
@@ -222,7 +222,7 @@ func TestTimeRange_Before(t *testing.T) {
 		got := r.Before(point)
 		const want = false
 		if want != got {
-			t.Errorf("Before() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("point is left edge of range", func(t *testing.T) {
@@ -230,7 +230,7 @@ func TestTimeRange_Before(t *testing.T) {
 		got := r.Before(point)
 		const want = false
 		if want != got {
-			t.Errorf("Before() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("point is in range", func(t *testing.T) {
@@ -238,7 +238,7 @@ func TestTimeRange_Before(t *testing.T) {
 		got := r.Before(point)
 		const want = false
 		if want != got {
-			t.Errorf("Before() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("point is right edge of range", func(t *testing.T) {
@@ -246,7 +246,7 @@ func TestTimeRange_Before(t *testing.T) {
 		got := r.Before(point)
 		const want = false
 		if want != got {
-			t.Errorf("Before() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("point is after range", func(t *testing.T) {
@@ -254,7 +254,7 @@ func TestTimeRange_Before(t *testing.T) {
 		got := r.Before(point)
 		const want = true
 		if want != got {
-			t.Errorf("Before() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 }
@@ -270,7 +270,7 @@ func TestTimeRange_After(t *testing.T) {
 		got := r.After(point)
 		const want = true
 		if want != got {
-			t.Errorf("After() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("point is left edge of range", func(t *testing.T) {
@@ -278,7 +278,7 @@ func TestTimeRange_After(t *testing.T) {
 		got := r.After(point)
 		const want = false
 		if want != got {
-			t.Errorf("After() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("point is in range", func(t *testing.T) {
@@ -286,7 +286,7 @@ func TestTimeRange_After(t *testing.T) {
 		got := r.After(point)
 		const want = false
 		if want != got {
-			t.Errorf("After() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("point is right edge of range", func(t *testing.T) {
@@ -294,7 +294,7 @@ func TestTimeRange_After(t *testing.T) {
 		got := r.After(point)
 		const want = false
 		if want != got {
-			t.Errorf("After() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 	t.Run("point is after range", func(t *testing.T) {
@@ -302,7 +302,7 @@ func TestTimeRange_After(t *testing.T) {
 		got := r.After(point)
 		const want = false
 		if want != got {
-			t.Errorf("After() wants %v but was %v", want, got)
+			t.Errorf("want %v but was %v", want, got)
 		}
 	})
 }
@@ -319,7 +319,7 @@ func TestTimeRange_Shift(t *testing.T) {
 			time.Date(2006, 1, 2, 14, 52, 5, 0, time.UTC),
 		)
 		if !want.Equal(got) {
-			t.Errorf("Intersect(): want %v != got %v", want, got)
+			t.Errorf("want %v != got %v", want, got)
 		}
 	})
 	t.Run("future", func(t *testing.T) {
@@ -329,7 +329,7 @@ func TestTimeRange_Shift(t *testing.T) {
 			time.Date(2006, 1, 2, 15, 22, 5, 0, time.UTC),
 		)
 		if !want.Equal(got) {
-			t.Errorf("Intersect(): want %v != got %v", want, got)
+			t.Errorf("want %v != got %v", want, got)
 		}
 	})
 }
@@ -346,7 +346,7 @@ func TestTimeRange_Extend(t *testing.T) {
 			time.Date(2006, 1, 2, 15, 6, 50, 0, time.UTC),
 		)
 		if !want.Equal(got) {
-			t.Errorf("Extend(): want %v != got %v", want, got)
+			t.Errorf("want %v != got %v", want, got)
 		}
 	})
 	t.Run("longer", func(t *testing.T) {
@@ -356,7 +356,7 @@ func TestTimeRange_Extend(t *testing.T) {
 			time.Date(2006, 1, 2, 15, 7, 20, 0, time.UTC),
 		)
 		if !want.Equal(got) {
-			t.Errorf("Extend(): want %v != got %v", want, got)
+			t.Errorf("want %v != got %v", want, got)
 		}
 	})
 }
@@ -370,7 +370,7 @@ func TestIntersect(t *testing.T) {
 		got := timerange.Intersect(a, a)
 		want := a
 		if !want.Equal(got) {
-			t.Errorf("Intersect(): want %v != got %v", want, got)
+			t.Errorf("want %v != got %v", want, got)
 		}
 	})
 	t.Run("a.start < b < a.end", func(t *testing.T) {
@@ -385,7 +385,7 @@ func TestIntersect(t *testing.T) {
 		got := timerange.Intersect(a, b)
 		want := b
 		if !want.Equal(got) {
-			t.Errorf("Intersect(): want %v != got %v", want, got)
+			t.Errorf("want %v != got %v", want, got)
 		}
 	})
 	t.Run("b.start < a.start < b.end < a.end", func(t *testing.T) {
@@ -403,7 +403,7 @@ func TestIntersect(t *testing.T) {
 			time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
 		)
 		if !want.Equal(got) {
-			t.Errorf("Intersect(): want %v != got %v", want, got)
+			t.Errorf("want %v != got %v", want, got)
 		}
 	})
 	t.Run("a.start < b.start < a.end < b.end", func(t *testing.T) {
@@ -421,7 +421,7 @@ func TestIntersect(t *testing.T) {
 			time.Date(2006, 1, 2, 15, 6, 5, 0, time.UTC),
 		)
 		if !want.Equal(got) {
-			t.Errorf("Intersect(): want %v != got %v", want, got)
+			t.Errorf("want %v != got %v", want, got)
 		}
 	})
 	t.Run("a < b", func(t *testing.T) {
@@ -436,7 +436,7 @@ func TestIntersect(t *testing.T) {
 		got := timerange.Intersect(a, b)
 		var want timerange.TimeRange
 		if !want.Equal(got) {
-			t.Errorf("Intersect(): want %v != got %v", want, got)
+			t.Errorf("want %v != got %v", want, got)
 		}
 	})
 	t.Run("a > b", func(t *testing.T) {
@@ -451,7 +451,7 @@ func TestIntersect(t *testing.T) {
 		got := timerange.Intersect(a, b)
 		var want timerange.TimeRange
 		if !want.Equal(got) {
-			t.Errorf("Intersect(): want %v != got %v", want, got)
+			t.Errorf("want %v != got %v", want, got)
 		}
 	})
 }

@@ -1,12 +1,16 @@
 # go-timerange [![go](https://github.com/int128/go-timerange/actions/workflows/go.yaml/badge.svg)](https://github.com/int128/go-timerange/actions/workflows/go.yaml)
 
-This is a Go package of date time range.
+This is a Go package to handle a time range.
 
 ## Getting Started
+
+To install this package,
 
 ```shell
 go get github.com/int128/go-timerange
 ```
+
+Here is an example.
 
 ```go
 package example
