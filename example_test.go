@@ -72,6 +72,15 @@ func ExampleTimeRange_Shift() {
 	// output: [2006-01-02T15:19:05Z, 2006-01-02T15:22:05Z]
 }
 
+func ExampleTimeRange_ShiftDate() {
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
+	fmt.Print(r.ShiftDate(0, 0, -1))
+	// output: [2006-01-01T15:04:05Z, 2006-01-01T15:07:05Z]
+}
+
 func ExampleTimeRange_Extend() {
 	r := timerange.New(
 		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
@@ -79,6 +88,15 @@ func ExampleTimeRange_Extend() {
 	)
 	fmt.Print(r.Extend(15 * time.Minute))
 	// output: [2006-01-02T15:04:05Z, 2006-01-02T15:22:05Z]
+}
+
+func ExampleTimeRange_ExtendDate() {
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
+	fmt.Print(r.ExtendDate(0, 0, 1))
+	// output: [2006-01-02T15:04:05Z, 2006-01-03T15:07:05Z]
 }
 
 func ExampleTimeRange_Split() {

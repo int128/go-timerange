@@ -94,9 +94,23 @@ func (r TimeRange) Shift(d time.Duration) TimeRange {
 	return New(r.start.Add(d), r.end.Add(d))
 }
 
+// ShiftDate returns a TimeRange moved by the duration in days.
+// If the duration is positive, this returns the later range.
+// If the duration is negative, this returns the earlier range.
+func (r TimeRange) ShiftDate(years, months, days int) TimeRange {
+	return New(r.start.AddDate(years, months, days), r.end.AddDate(years, months, days))
+}
+
 // Extend returns an extended TimeRange for the duration.
 // If the duration is positive, this returns the longer range.
 // If the duration is negative, this returns the shorter range.
 func (r TimeRange) Extend(d time.Duration) TimeRange {
 	return New(r.start, r.end.Add(d))
+}
+
+// ExtendDate returns an extended TimeRange for the duration in days.
+// If the duration is positive, this returns the longer range.
+// If the duration is negative, this returns the shorter range.
+func (r TimeRange) ExtendDate(years, months, days int) TimeRange {
+	return New(r.start, r.end.AddDate(years, months, days))
 }
