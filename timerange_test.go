@@ -334,6 +334,33 @@ func TestTimeRange_Shift(t *testing.T) {
 	})
 }
 
+func TestTimeRange_Extend(t *testing.T) {
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
+	t.Run("shorter", func(t *testing.T) {
+		got := r.Extend(-15 * time.Second)
+		want := timerange.New(
+			time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 6, 50, 0, time.UTC),
+		)
+		if !want.Equal(got) {
+			t.Errorf("Extend(): want %v != got %v", want, got)
+		}
+	})
+	t.Run("longer", func(t *testing.T) {
+		got := r.Extend(15 * time.Second)
+		want := timerange.New(
+			time.Date(2006, 1, 2, 15, 5, 5, 0, time.UTC),
+			time.Date(2006, 1, 2, 15, 7, 20, 0, time.UTC),
+		)
+		if !want.Equal(got) {
+			t.Errorf("Extend(): want %v != got %v", want, got)
+		}
+	})
+}
+
 func TestIntersect(t *testing.T) {
 	t.Run("same range", func(t *testing.T) {
 		a := timerange.New(

@@ -50,3 +50,12 @@ func ExampleTimeRange_String() {
 	fmt.Print(r)
 	// output: [2006-01-02T15:04:05Z, 2006-01-02T15:07:05Z]
 }
+
+func ExampleTimeRange_Extend() {
+	r := timerange.New(
+		time.Date(2006, 1, 2, 15, 4, 5, 0, time.UTC),
+		time.Date(2006, 1, 2, 15, 7, 5, 0, time.UTC),
+	)
+	fmt.Print(r.Extend(15 * time.Minute))
+	// output: [2006-01-02T15:04:05Z, 2006-01-02T15:22:05Z]
+}
