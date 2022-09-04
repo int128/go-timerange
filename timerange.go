@@ -1,5 +1,4 @@
-// Package timerange provides a simple type of time range.
-// It is immutable type.
+// Package timerange provides simple types to handle a time range.
 package timerange
 
 import (
@@ -7,7 +6,8 @@ import (
 	"time"
 )
 
-// New returns a TimeRange with start and end.
+// New returns a TimeRange with start time and end time.
+// It must be start <= end.
 // If start > end, this returns a zero value.
 func New(start, end time.Time) TimeRange {
 	if start.After(end) {
@@ -16,21 +16,21 @@ func New(start, end time.Time) TimeRange {
 	return TimeRange{start: start, end: end}
 }
 
-// From returns a TimeRange with start and duration.
-// Duration must be positive.
+// From returns a TimeRange with start time and duration.
+// The duration must be positive.
 func From(start time.Time, duration time.Duration) TimeRange {
 	return New(start, start.Add(duration))
 }
 
-// Until returns a TimeRange with end and duration.
-// Duration must be positive.
+// Until returns a TimeRange with end time and duration.
+// The duration must be positive.
 func Until(end time.Time, duration time.Duration) TimeRange {
 	return New(end.Add(-duration), end)
 }
 
 // TimeRange represents an immutable range of time with timezone.
-// The range includes start and end, i.e. [start, end].
-// Start must be before end.
+// The range includes start time and end time, i.e., [start, end].
+// Start time must be earlier than end time.
 type TimeRange struct {
 	start time.Time
 	end   time.Time
@@ -56,17 +56,17 @@ func (r TimeRange) Equal(x TimeRange) bool {
 	return r.start.Equal(x.start) && r.end.Equal(x.end)
 }
 
-// IsZero returns true if both start and end are zero value.
+// IsZero returns true if both start time and end time are zero value.
 func (r TimeRange) IsZero() bool {
 	return r.start.IsZero() && r.end.IsZero()
 }
 
-// Duration returns the duration between start and end.
+// Duration returns the duration between start time and end time.
 func (r TimeRange) Duration() time.Duration {
 	return r.end.Sub(r.start)
 }
 
-// Contains returns true if the time is in this range.
+// Contains returns true if the time is within this range.
 func (r TimeRange) Contains(t time.Time) bool {
 	return r.start.Equal(t) || r.end.Equal(t) || (r.start.Before(t) && t.Before(r.end))
 }
@@ -77,24 +77,26 @@ func In(t time.Time, r TimeRange) bool {
 	return r.Contains(t)
 }
 
-// Before returns true if this range is before the time.
+// Before returns true if this range is earlier than the time.
 func (r TimeRange) Before(t time.Time) bool {
 	return r.end.Before(t)
 }
 
-// After returns true if this range is after the time.
+// After returns true if this range is later than the time.
 func (r TimeRange) After(t time.Time) bool {
 	return r.start.After(t)
 }
 
-// Shift returns a TimeRange moved for the duration.
-// Duration can be positive or negative.
+// Shift returns a TimeRange moved by the duration.
+// If the duration is positive, this returns the later range.
+// If the duration is negative, this returns the earlier range.
 func (r TimeRange) Shift(d time.Duration) TimeRange {
 	return New(r.start.Add(d), r.end.Add(d))
 }
 
 // Extend returns an extended TimeRange for the duration.
-// Duration can be positive or negative.
+// If the duration is positive, this returns the longer range.
+// If the duration is negative, this returns the shorter range.
 func (r TimeRange) Extend(d time.Duration) TimeRange {
 	return New(r.start, r.end.Add(d))
 }
